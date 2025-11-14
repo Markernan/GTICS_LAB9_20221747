@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Gestión de Productos - Cliente</title>
+    <style>
+
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+
+        th { background-color: #f2f2f2; }
+        .busqueda { margin: 20px 0; padding: 15px; background-color: #f9f9f9; border-radius: 5px; }
+        .error {
+            color: #c92a2a;
+            background-color: #fff5f5;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #f03e3e;
+        }
+        .exito {
+            color: #2f9e44;
+            background-color: #f4fef8;
+            padding: 10px;
+            border-radius: 5px;
+
+            border-left: 4px solid #51cf66;
+        }
+        input, button { margin: 5px; padding: 8px; }
+    </style>
+</head>
+<body>
+<h1>Gestión de Productos</h1>
+
+<div class="busqueda">
+    <h3>Buscar producto por su ID</h3>
+
+    <form method="post" action="/buscar">
+        <input type="number" name="id" placeholder="ID del producto" required
+
+               th:value="${idBuscado != null} ? ${idBuscado} : ''">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <div th:if="${productoBuscado != null}" class="exito">
+        <h4> Producto Encontrado:</h4>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Proveedor ID</th>
+                <th>Categoría ID</th>
+                <th>Unidad</th>
+                <th>Precio</th>
+            </tr>
+            <tr>
+                <td th:text="${productoBuscado.id}"></td>
+
+                <td th:text="${productoBuscado.nombre}"></td>
+                <td th:text="${productoBuscado.proveedorId}"></td>
+
+                <td th:text="${productoBuscado.categoriaId}"></td>
+                <td th:text="${productoBuscado.unidad}"></td>
+                <td th:text="${'$' + productoBuscado.precio}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div th:if="${productoBuscado == null and idBuscado != null}" class="error">
+
+        <h4>Producto no encontrado</h4>
+
+        <p>No se encontró ningún producto con el ID: <strong th:text="${idBuscado}"></strong></p>
+    </div>
+</div>
+
+<div th:if="${not #lists.isEmpty(productos)}">
+    <h3>todos los productos:</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Proveedor ID</th>
+            <th>Categoría ID</th>
+            <th>Unidad</th>
+            <th>Precio</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="producto : ${productos}">
+            <td th:text="${producto.id}"></td>
+            <td th:text="${producto.nombre}"></td>
+
+            <td th:text="${producto.proveedorId}"></td>
+            <td th:text="${producto.categoriaId}"></td>
+            <td th:text="${producto.unidad}"></td>
+            <td th:text="${'$' + producto.precio}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:if="${#lists.isEmpty(productos)}">
+
+    <h3>No hay productos disponibles</h3>
+</div>
+</body>
+</html>
